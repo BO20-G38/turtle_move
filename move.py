@@ -1,33 +1,35 @@
-import random
-import decimal
-import os
+import subprocess
+import time
+import sys
 
-BASE_CMD = "rostopic pub /cmd_vel geometry_msgs/Twist -- "
+MOVE_DUR = 3
+initial_dir = sys.argv[1]
 
-
-def get_coordinate():
-    rnd_range = random.randrange(100, 500)
-    coord = decimal.Decimal(rnd_range) / 100
-    return float(coord)
+print("running move.py")
 
 
-def generate_coordinates():
-    linear = []
-    angular = []
+def run_script(direction):
+    script = ['python', 'move.py', direction]
+    process = subprocess.Popen(script)
 
-    for i in range(3):
-        linear.append(get_coordinate())
-        angular.append(get_coordinate())
-
-    return stringify(linear) + " " + stringify(angular)
+    delay = direction != "0"
+    clear(process, delay)
 
 
-def stringify(arr):
-    return "'" + str(arr) + "'"
+def clear(process, delay):
+    if delay:
+        time.sleep(MOVE_DUR)
+
+    process.terminate()
 
 
-def move():
-    os.system(BASE_CMD + generate_coordinates())
+def start():
+    run_script(initial_dir)
+
+    # stop movement after each direction passed
+    if not initial_dir == "0":
+        run_script("0")
 
 
-move()
+start()
+print("Done running move.py")
