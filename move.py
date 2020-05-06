@@ -41,11 +41,11 @@ def stringify(arr):
 
 def move(movement_type):
     switch = {
-        0: stop(),
+        0: forward(),
         1: right(),
         2: left(),
-        3: forward(),
-        4: backward()
+        3: backward(),
+        4: stop()
     }
 
     coordinate = switch.get(movement_type)
