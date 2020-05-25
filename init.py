@@ -1,35 +1,76 @@
 import subprocess
 import time
 import sys
+import os
 
-MOVE_DUR = 3
 initial_dir = sys.argv[1]
-
-print("running move.py")
-
-
-def run_script(direction):
-    script = ['python', 'move.py', direction]
-    process = subprocess.Popen(script)
-
-    delay = direction != "0"
-    clear(process, delay)
+BASE_CMD = "rostopic pub /cmd_vel geometry_msgs/Twist -- "
 
 
-def clear(process, delay):
-    if delay:
-        time.sleep(MOVE_DUR)
 
-    process.terminate()
+def stop():
+    linear = [0, 0, 0]
+    angular = [0, 0, 0]
+    return stringify(linear) + " " + stringify(angular)
+
+
+
+
+def left():
+    linear = [1, 0, 0]
+    angular = [0, 0, -2]
+    return stringify(linear) + " " + stringify(angular)
+
+
+
+def right():
+    linear = [1, 0, 0]
+    angular = [0, 0, 2]
+    return stringify(linear) + " " + stringify(angular)
+
+
+
+def forward():
+    linear = [1, 0, 0]
+    angular = [0, 0, 0]
+    return stringify(linear) + " " + stringify(angular)
+
+
+
+def backward():
+    linear = [-1, 0, 0]
+    angular = [0, 0, 0]
+    return stringify(linear) + " " + stringify(angular)
+
+
+
+def stringify(arr):
+    return "'" + str(arr) + "'"
+
+
+
+def move(movement_type):
+    switch = {
+        "0": forward(),
+        "1": right(),
+        "2": left(),
+        "3": backward(),
+        "4": stop(),
+        "5": stop()
+    }
+
+
+coordinate = switch.get(movement_type)
+command = BASE_CMD + coordinate
+print(command)
+process = subprocess.Popen(command, shell=True)
+time.sleep(1)
+process.terminate()
 
 
 def start():
-    run_script(initial_dir)
-
-    # stop movement after each direction passed
-    if not initial_dir == "0":
-        run_script("0")
+    move(initial_dir)
 
 
 start()
-print("Done running move.py")
+sys.stdout.write("1")
