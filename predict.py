@@ -1,4 +1,3 @@
-from keras.models import load_model
 import os
 import time
 import sys
@@ -8,7 +7,7 @@ import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
 
 os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
-
+from keras.models import load_model
 
 CATEGORIES = ["forward", "right", "left", "backward", "stop", "still"]
 
