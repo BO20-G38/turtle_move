@@ -26,9 +26,9 @@ def prep_img(file_path):
     return img / 255
 
 
-def predict(model_path, img):
-    model = load_model(model_path)
-    result = model.predict_classes(prep_img(img))
+def predict():
+    model = load_model(MODEL_PATH)
+    result = model.predict_classes(prep_img(IMG_PATH))
     return result[0]
 
 
@@ -41,7 +41,7 @@ def connect():
 @sio.on(SOCKET_CHANNEL)
 def on_message(_):
     # calculates a new prediction from uploaded image
-    prediction = predict(MODEL_PATH, IMG_PATH)
+    prediction = predict()
 
     # move the robot according to calculated direction
     movement = Move(prediction)
