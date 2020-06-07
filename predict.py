@@ -9,14 +9,14 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
 from keras.models import load_model
 
-CATEGORIES = ["forward", "right", "left", "backward", "stop", "still"]
-MODEL_PATH = "workingDir + '/t11/McQueen_p3.model"
-IMG_PATH = "workingDir + '/direction_api/directions/direction.jpg"
-SOCKET_CHANNEL = "prediction"
-SOCKET_SRV_URL = "http://localhost:3000"
-
 sio = socketio.Client()
 workingDir = os.path.dirname(os.path.realpath(sys.argv[0]))
+
+CATEGORIES = ["forward", "right", "left", "backward", "stop", "still"]
+MODEL_PATH = workingDir + "/t11/McQueen_p3.model"
+IMG_PATH = workingDir + "/direction_api/directions/direction.jpg"
+SOCKET_CHANNEL = "prediction"
+SOCKET_SRV_URL = "http://localhost:3000"
 
 
 def prep_img(file_path):

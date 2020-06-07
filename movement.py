@@ -43,23 +43,24 @@ def concat_dir(linear, angular):
 
 def move(prediction_index):
     switch = {
-        "0": forward,
-        "1": right,
-        "2": left,
-        "3": backward,
-        "4": stop,
-        "5": stop
+        "0": forward(),
+        "1": right(),
+        "2": left(),
+        "3": backward(),
+        "4": stop(),
+        "5": stop()
     }
 
     coordinate = switch.get(prediction_index)
-    command = BASE_CMD + coordinate()
+    command = BASE_CMD + coordinate
     process = subprocess.Popen(command, shell=True)
+    process.sleep(1)
     process.terminate()
 
 
 class Move:
     def __init__(self, prediction):
-        self.prediction = prediction
+        self.prediction = str(prediction)
 
     def start(self):
         move(self.prediction)
