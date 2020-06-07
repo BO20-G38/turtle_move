@@ -3,6 +3,7 @@ import sys
 import socketio
 import cv2
 import warnings
+from movement import Move
 
 warnings.filterwarnings('ignore', category=FutureWarning)
 os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
@@ -39,7 +40,12 @@ def connect():
 
 @sio.on(SOCKET_CHANNEL)
 def on_message(_):
+    # calculates a new prediction from uploaded image
     prediction = predict(MODEL_PATH, IMG_PATH)
+
+    # move the robot according to calculated direction
+    movement = Move(prediction)
+    movement.start()
 
 
 connect()

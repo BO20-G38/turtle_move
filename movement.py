@@ -1,45 +1,47 @@
 import subprocess
-import sys
 
-initial_dir = sys.argv[1]
 BASE_CMD = "rostopic pub /cmd_vel geometry_msgs/Twist -- "
 
 
 def stop():
     linear = [0, 0, 0]
     angular = [0, 0, 0]
-    return stringify(linear) + " " + stringify(angular)
+    return concat_dir(linear, angular)
 
 
 def left():
     linear = [1, 0, 0]
     angular = [0, 0, -2]
-    return stringify(linear) + " " + stringify(angular)
+    return concat_dir(linear, angular)
 
 
 def right():
     linear = [1, 0, 0]
     angular = [0, 0, 2]
-    return stringify(linear) + " " + stringify(angular)
+    return concat_dir(linear, angular)
 
 
 def forward():
     linear = [1, 0, 0]
     angular = [0, 0, 0]
-    return stringify(linear) + " " + stringify(angular)
+    return concat_dir(linear, angular)
 
 
 def backward():
     linear = [-1, 0, 0]
     angular = [0, 0, 0]
-    return stringify(linear) + " " + stringify(angular)
+    return concat_dir(linear, angular)
 
 
 def stringify(arr):
     return "'" + str(arr) + "'"
 
 
-def move(movement_type):
+def concat_dir(linear, angular):
+    return stringify(linear) + " " + stringify(angular)
+
+
+def move(prediction_index):
     switch = {
         "0": forward,
         "1": right,
@@ -49,14 +51,15 @@ def move(movement_type):
         "5": stop
     }
 
-    coordinate = switch.get(movement_type)
+    coordinate = switch.get(prediction_index)
     command = BASE_CMD + coordinate()
     process = subprocess.Popen(command, shell=True)
     process.terminate()
 
 
-def start():
-    move(initial_dir)
+class Move:
+    def __init__(self, prediction):
+        self.prediction = prediction
 
-
-start()
+    def start(self):
+        move(self.prediction)
